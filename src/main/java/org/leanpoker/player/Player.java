@@ -15,16 +15,24 @@ public class Player {
         int buyIn = request.getAsJsonObject().get("current_buy_in").getAsInt();
         buyIn = buyIn - getMe(request).get("bet").getAsInt();
         int round = request.getAsJsonObject().get("round").getAsInt();
+        int betIndex = request.getAsJsonObject().get("bet_index").getAsInt();
         int raise = 0;
         Hand hand = new Hand(getHoleCards(request));
         Random random = new Random();
 
         int minimumRaise = request.getAsJsonObject().get("minimum_raise").getAsInt();
         if (round == 0) {
+
             if (hand.isPocketPair()) {
                 raise = minimumRaise * randomMultiplier(random);
             } else if (hand.isCrap() && !isBlind(request)) {
-                return random.nextBoolean() ? buyIn : 0;
+                return 0;
+            } else if (betIndex > 0) {
+                if (hand.isCrap()) {
+                    return 0;
+                } else {
+                    return buyIn;
+                }
             }
         } else {
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
