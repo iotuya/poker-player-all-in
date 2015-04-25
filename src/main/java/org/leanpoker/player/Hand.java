@@ -46,7 +46,11 @@ public class Hand {
     }
 
     public boolean isCrap() {
-        return (!isPocketPair() && !firstSuite.equals(secondSuite)) || bigDiff();
+        return (!isPocketPair() && !firstSuite.equals(secondSuite)) || (bigDiff() && !highCard());
+    }
+
+    private boolean highCard() {
+        return firstRank >= 10 || secondRank >= 10;
     }
 
     private boolean bigDiff() {
