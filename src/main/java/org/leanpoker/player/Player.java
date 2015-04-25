@@ -31,7 +31,9 @@ public class Player {
                 if (hand.isCrap()) {
                     return 0;
                 } else {
-                    return buyIn;
+                    if (hand.isPocketPair() && hand.isGood()) {
+                        raise = minimumRaise;
+                    }
                 }
             }
         } else {
