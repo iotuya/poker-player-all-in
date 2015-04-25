@@ -21,6 +21,7 @@ public class Player {
         int round = request.getAsJsonObject().get("round").getAsInt();
         int raise = 0;
         Hand hand = new Hand(getHoleCards(request));
+        Random random = new Random();
 
         int minimumRaise = request.getAsJsonObject().get("minimum_raise").getAsInt();
         if (round == 0) {
@@ -44,12 +45,12 @@ public class Player {
                 }
 
                 if (hand.isPocketPair()) {
-                    raise = minimumRaise * 2;
+                    raise = minimumRaise * (random.nextInt(4) + 2);
                 }
 
-                if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && buyIn < minimumRaise) {
-                    return  0;
-                }
+//                if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && buyIn < minimumRaise) {
+//                    return 0;
+//                }
             }
         }
         return buyIn + raise;
