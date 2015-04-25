@@ -57,10 +57,10 @@ public class Player {
             return 0 - buyIn;
         }
         if (hand.isGood(rank, value)) {
-            return buyIn;
+            return minimumRaise;
         }
 
-        return minimumRaise;
+        return 0;
 
     }
 
