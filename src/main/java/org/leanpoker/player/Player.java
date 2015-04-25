@@ -22,20 +22,15 @@ public class Player {
 
         int minimumRaise = request.getAsJsonObject().get("minimum_raise").getAsInt();
         if (round == 0) {
-
-            if (hand.isPocketPair() && betIndex == 0) {
-                raise = minimumRaise * randomMultiplier(random);
-            } else if (hand.isCrap() && !isBlind(request, betIndex)) {
-                return 0;
-            } else if (betIndex > 0) {
-                if (hand.isCrap()) {
-                    return 0;
-                }
-            }
+            raise = blindStrategy(request, buyIn, betIndex, raise, hand, random, minimumRaise);
         } else {
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
 
             if (!cards.isEmpty()) {
+                JsonElement rainmanData = Rainman.callRainMan(request);
+                int rank = rainmanData.getAsJsonObject().get("rank").getAsInt();
+                int value = rainmanData.getAsJsonObject().get("value").getAsInt();
+
                 Card highest = getHighestCard(cards);
                 if (betIndex > 0) {
                     if (buyIn > getMe(request).get("stack").getAsInt() / 4) {
@@ -50,21 +45,32 @@ public class Player {
                     raise = minimumRaise;
                 }
 
-                if (hand.isGood()) {
+                if (hand.isGood(rank , value)) {
                     raise = minimumRaise * randomMultiplier(random);
                 } else if (hand.isPocketPair()) {
                     raise = raise + minimumRaise * randomMultiplier(random);
                 }
 
-                JsonElement rainmanData = Rainman.callRainMan(request);
-                int rank = rainmanData.getAsJsonObject().get("rank").getAsInt();
-                int value = rainmanData.getAsJsonObject().get("value").getAsInt();
+
                 if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && rank < 1 || (rank >= 1 && rank <4  && value < 5)) {
                     return 0;
                 }
             }
         }
         return buyIn + raise;
+    }
+
+    private static int blindStrategy(JsonElement request, int buyIn, int betIndex, int raise, Hand hand, Random random, int minimumRaise) {
+        if (hand.isPocketPair() && betIndex == 0) {
+            raise = minimumRaise * randomMultiplier(random);
+        } else if (hand.isCrap() && !isBlind(request, betIndex)) {
+            raise = 0 - buyIn;
+        } else if (betIndex > 0) {
+            if (hand.isCrap()) {
+                raise = 0 - buyIn;
+            }
+        }
+        return raise;
     }
 
     private static boolean highPair(Hand hand, Card card) {

@@ -49,7 +49,11 @@ public class Hand {
         return firstCard.getRank() > secondCard.getRank() ? firstCard.getRank() : secondCard.getRank();
     }
 
-    public boolean isGood() {
-        return firstCard.getRank() >= 10 && secondCard.getRank() >= 10;
+    public boolean isGood(int rank, int value) {
+        return twoHigh() || (rank > 2) || (rank > 0 && value > 10);
+    }
+
+    private boolean twoHigh() {
+        return firstCard.isHigh() && secondCard.isHigh();
     }
 }
