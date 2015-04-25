@@ -33,8 +33,7 @@ public class Player {
 
                 Card highest = getHighestCard(cards);
                 if (betIndex > 0) {
-                    int x = continuedBettingStrategy(request, buyIn, hand, highest, minimumRaise);
-                    return x;
+                    return continuedBettingStrategy(request, buyIn, hand, highest, minimumRaise);
                 }
                 if (hand.containsHighest(highest)) {
                     raise = minimumRaise;
@@ -60,7 +59,7 @@ public class Player {
             return buyIn;
         }
 
-        return minimumRaise;
+        return buyIn + minimumRaise;
 
     }
 
