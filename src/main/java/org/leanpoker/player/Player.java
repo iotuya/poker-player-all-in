@@ -63,7 +63,7 @@ public class Player {
     }
 
     private static int randomMultiplier(Random random) {
-        return random.nextInt(4) + 2;
+        return random.nextInt(4) + 1;
     }
 
     private static List<Card> getCards(JsonArray community_cards) {
