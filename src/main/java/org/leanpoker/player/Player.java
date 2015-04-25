@@ -70,7 +70,7 @@ public class Player {
         } else if (hand.isCrap() && !isBlind(request, betIndex)) {
             raise = 0 - buyIn;
         } else if (betIndex > 0) {
-            if (hand.isCrap()) {
+            if (hand.isCrap() || buyIn > 500) {
                 raise = 0 - buyIn;
             }
         }
