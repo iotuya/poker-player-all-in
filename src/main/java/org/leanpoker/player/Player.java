@@ -19,14 +19,15 @@ public class Player {
         int buyIn = request.getAsJsonObject().get("current_buy_in").getAsInt();
         buyIn = buyIn - getMe(request).get("bet").getAsInt();
         int round = request.getAsJsonObject().get("round").getAsInt();
+        int raise = 0;
         Hand hand = new Hand(getHoleCards(request));
 
         int minimumRaise = request.getAsJsonObject().get("minimum_raise").getAsInt();
         if (round == 0) {
             if (hand.isPocketPair() && hand.highCard()) {
-                buyIn = (buyIn + minimumRaise) * 2;
+                raise = (buyIn + minimumRaise) * 2;
             } else if (hand.isCrap() && !isBlind(request)) {
-                buyIn = 0;
+                raise = 0;
             }
         } else {
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
@@ -39,19 +40,19 @@ public class Player {
                 }
 
                 if (hand.containsHighest(highest)) {
-                    buyIn = (buyIn + minimumRaise);
+                    raise = minimumRaise;
                 }
 
                 if (hand.isPocketPair()) {
-                    buyIn = (buyIn + minimumRaise) * 2;
+                    raise = minimumRaise * 2;
                 }
 
                 if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && buyIn < minimumRaise) {
-                    return 0;
+                    return  0;
                 }
             }
         }
-        return buyIn;
+        return buyIn + raise;
     }
 
     private static List<Card> getCards(JsonArray community_cards) {
