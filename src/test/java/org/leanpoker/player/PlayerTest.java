@@ -26,7 +26,7 @@ public class PlayerTest {
                 "{\"rank\":\"9\",\"suit\":\"diamonds\"}]}");
 
         JsonArray cardsArray = cards.getAsJsonObject().get("cards").getAsJsonArray();
-        JsonElement element = Player.callRainMan(cardsArray);
+        JsonElement element = Rainman.callRainMan(cardsArray);
 
         assertTrue(element != null);
 

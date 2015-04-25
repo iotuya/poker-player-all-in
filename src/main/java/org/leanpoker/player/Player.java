@@ -40,7 +40,7 @@ public class Player {
     }
 
 
-    private static JsonArray getHoleCards(JsonElement state) {
+    public static JsonArray getHoleCards(JsonElement state) {
         JsonElement me = getMe(state);
         return me.getAsJsonObject().get("hole_cards").getAsJsonArray();
     }
@@ -48,56 +48,5 @@ public class Player {
     private static JsonElement getMe(JsonElement state) {
         int myIndex = state.getAsJsonObject().get("in_action").getAsInt();
         return state.getAsJsonObject().get("players").getAsJsonArray().get(myIndex);
-    }
-
-    private static JsonElement callRainMan(JsonElement state) {
-        JsonArray allCards = state.getAsJsonObject().get("community_cards").getAsJsonArray();
-        JsonArray holeCards = getHoleCards(state);
-
-        allCards.addAll(holeCards);
-
-        return callRainMan(allCards);
-    }
-
-    public static JsonElement callRainMan(JsonArray allCards) {
-        JsonElement rainman = null;
-        try {
-            String RAINMAN_URL = "http://rainman.leanpoker.org/rank";
-            String CHARSET = "UTF-8";
-            String query = "cards="  + URLEncoder.encode(allCards.toString(), CHARSET);
-
-            URLConnection connection = new URL(RAINMAN_URL + "?" + query).openConnection();
-            connection.setRequestProperty("Accept-Charset", CHARSET);
-
-            String responseString = convertStreamToString(connection.getInputStream());
-
-            rainman = new JsonParser().parse(responseString);
-        } catch (IOException e) {
-
-        }
-
-        return rainman;
-    }
-
-    private static String convertStreamToString(InputStream is) {
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
     }
 }
