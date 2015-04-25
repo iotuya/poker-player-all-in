@@ -33,13 +33,8 @@ public class Player {
 
                 Card highest = getHighestCard(cards);
                 if (betIndex > 0) {
-                    if (buyIn > getMe(request).get("stack").getAsInt() / 4) {
-                        return 0;
-                    } else {
-                        if (!highPair(hand, highest)) {
-                            return buyIn;
-                        }
-                    }
+                    int x = continuedBettingStrategy(request, buyIn, hand, highest, minimumRaise);
+                    return x;
                 }
                 if (hand.containsHighest(highest)) {
                     raise = minimumRaise;
@@ -55,6 +50,18 @@ public class Player {
             }
         }
         return buyIn + raise;
+    }
+
+    private static int continuedBettingStrategy(JsonElement request, int buyIn, Hand hand, Card highest, int minimumRaise) {
+        if (buyIn > getMe(request).get("stack").getAsInt() / 4) {
+            return 0;
+        }
+        if (!highPair(hand, highest)) {
+            return buyIn;
+        }
+
+        return minimumRaise;
+
     }
 
     private static int blindStrategy(JsonElement request, int buyIn, int betIndex, int raise, Hand hand, Random random, int minimumRaise) {
