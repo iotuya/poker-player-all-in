@@ -12,21 +12,39 @@ public class Player {
 
     public static int betRequest(JsonElement request) {
         int buyIn = request.getAsJsonObject().get("current_buy_in").getAsInt();
-        JsonArray players = request.getAsJsonObject().get("playeres").getAsJsonArray();
         int round = request.getAsJsonObject().get("round").getAsInt();
-        int playerBet = 0;
-        for (JsonElement player : players) {
-            JsonObject playerObject = player.getAsJsonObject();
-            if ("active".equals(playerObject.get("status"))) {
-                playerBet = playerObject.get("bet").getAsInt();
-                break;
-            }
+        JsonArray holeCards = getHoleCards(request);
+        String firstCardRank = holeCards.get(0).getAsJsonObject().get("rank").getAsString();
+        String secondCardRank = holeCards.get(1).getAsJsonObject().get("rank").getAsString();
+
+        if (firstCardRank.equals(secondCardRank)) {
+            buyIn = buyIn * 2;
         }
-        buyIn = buyIn - playerBet;
         return round == 0 ? buyIn : buyIn * 2;
     }
 
     public static void showdown(JsonElement game) {
 
+    }
+
+
+    private static JsonArray getHoleCards(JsonElement state) {
+        JsonArray players = state.getAsJsonObject().get("players").getAsJsonArray();
+        for (JsonElement player : players) {
+            if ("All In".equals(player.getAsJsonObject().get("name").getAsString())) {
+                return player.getAsJsonObject().get("hole_cards").getAsJsonArray();
+            }
+        }
+
+        return null;
+    }
+
+    private static JsonElement callRainMan(JsonElement state) {
+        JsonArray communityCards = state.getAsJsonObject().get("community_cards").getAsJsonArray();
+        JsonArray holeCards = getHoleCards(state);
+
+        communityCards.addAll(holeCards);
+        //TODO call rain man
+        return null;
     }
 }
