@@ -37,9 +37,6 @@ public class Player {
                 }
             }
 
-            if (hand.isBiggerThan(highest)) {
-                buyIn = buyIn - minimumRaise;
-            }
             if (hand.containsHighest(highest)) {
                 buyIn = (buyIn + minimumRaise);
             }
