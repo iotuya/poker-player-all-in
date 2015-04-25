@@ -16,14 +16,16 @@ public class Player {
         int round = request.getAsJsonObject().get("round").getAsInt();
         Hand hand = new Hand(getHoleCards(request));
 
-        if (hand.isPocketPair()) {
-            buyIn = buyIn * 2;
-        }
+        if (round == 0) {
+            if (hand.isPocketPair()) {
+                buyIn = buyIn * 2;
+            }
 
-        if (hand.isCrap()) {
-            buyIn = 0;
+            if (hand.isCrap()) {
+                buyIn = 0;
+            }
         }
-        return round == 0 ? buyIn : buyIn * 2;
+        return buyIn;
     }
 
     public static void showdown(JsonElement game) {
