@@ -13,11 +13,9 @@ public class Player {
     public static int betRequest(JsonElement request) {
         int buyIn = request.getAsJsonObject().get("current_buy_in").getAsInt();
         int round = request.getAsJsonObject().get("round").getAsInt();
-        JsonArray holeCards = getHoleCards(request);
-        String firstCardRank = holeCards.get(0).getAsJsonObject().get("rank").getAsString();
-        String secondCardRank = holeCards.get(1).getAsJsonObject().get("rank").getAsString();
+        Hand hand = new Hand(getHoleCards(request));
 
-        if (firstCardRank.equals(secondCardRank)) {
+        if (hand.isPocketPair()) {
             buyIn = buyIn * 2;
         }
         return round == 0 ? buyIn : buyIn * 2;
