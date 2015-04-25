@@ -30,22 +30,22 @@ public class Player {
             } else if (betIndex > 0) {
                 if (hand.isCrap()) {
                     return 0;
-                } else {
-                    if (hand.isPocketPair() && hand.isGood()) {
-                        return buyIn;
-                    }
                 }
             }
         } else {
-            if (betIndex > 0) {
-                if (buyIn > getMe(request).get("stack").getAsInt() / 4) {
-                    return 0;
-                }
-            }
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
+
             if (!cards.isEmpty()) {
                 Card highest = getHighestCard(cards);
-
+                if (betIndex > 0) {
+                    if (buyIn > getMe(request).get("stack").getAsInt() / 4) {
+                        return 0;
+                    } else {
+                        if (!highPair(hand, highest)) {
+                            return buyIn;
+                        }
+                    }
+                }
                 if (hand.containsHighest(highest)) {
                     raise = minimumRaise;
                 }
@@ -65,6 +65,10 @@ public class Player {
             }
         }
         return buyIn + raise;
+    }
+
+    private static boolean highPair(Hand hand, Card card) {
+        return hand.isPocketPair() || hand.containsHighest(card);
     }
 
     private static Card getHighestCard(List<Card> cards) {
