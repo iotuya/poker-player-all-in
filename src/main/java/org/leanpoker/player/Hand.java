@@ -26,7 +26,7 @@ public class Hand {
         return !isPocketPair()
                 && !firstCard.getSuite().equalsIgnoreCase(secondCard.getSuite())
                 && bigDiff()
-                && !highCard();
+                && !twoHigh();
     }
 
     public boolean highCard() {
