@@ -24,7 +24,7 @@ public class Player {
     }
 
     public static void showdown(JsonElement game) {
-        //todo
+        //todo x
     }
 
 
