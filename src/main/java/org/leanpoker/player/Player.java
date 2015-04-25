@@ -47,10 +47,7 @@ public class Player {
 
                 if (hand.isGood(rank , value)) {
                     raise = minimumRaise * randomMultiplier(random);
-                } else if (hand.isPocketPair()) {
-                    raise = raise + minimumRaise * randomMultiplier(random);
                 }
-
 
                 if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && rank < 1 || (rank >= 1 && rank <4  && value < 5)) {
                     return 0;
