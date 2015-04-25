@@ -16,10 +16,10 @@ public class Hand {
     public Hand(JsonArray holeCards) {
         JsonObject firstCard = holeCards.get(0).getAsJsonObject();
         firstRank = parseRank(firstCard.get("rank").getAsString());
-        firstSuite = firstCard.get("suite").getAsString();
+        firstSuite = firstCard.get("suit").getAsString();
         JsonObject secondCard = holeCards.get(1).getAsJsonObject();
         secondRank = parseRank(secondCard.get("rank").getAsString());
-        secondSuite = secondCard.get("suite").getAsString();
+        secondSuite = secondCard.get("suit").getAsString();
     }
 
     private int parseRank(String rank) {
