@@ -13,6 +13,7 @@ public class Player {
 
     public static int betRequest(JsonElement request) {
         int buyIn = request.getAsJsonObject().get("current_buy_in").getAsInt();
+        buyIn = buyIn - getMe(request).getAsJsonObject().get("bet").getAsInt();
         int round = request.getAsJsonObject().get("round").getAsInt();
         Hand hand = new Hand(getHoleCards(request));
 
@@ -36,8 +37,13 @@ public class Player {
 
 
     private static JsonArray getHoleCards(JsonElement state) {
+        JsonElement me = getMe(state);
+        return me.getAsJsonObject().get("hole_cards").getAsJsonArray();
+    }
+
+    private static JsonElement getMe(JsonElement state) {
         int myIndex = state.getAsJsonObject().get("in_action").getAsInt();
-        return state.getAsJsonObject().get("players").getAsJsonArray().get(myIndex).getAsJsonObject().get("hole_cards").getAsJsonArray();
+        return state.getAsJsonObject().get("players").getAsJsonArray().get(myIndex);
     }
 
     private static JsonElement callRainMan(JsonElement state) {
