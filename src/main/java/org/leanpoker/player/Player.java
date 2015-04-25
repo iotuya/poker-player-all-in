@@ -17,7 +17,7 @@ public class Player {
 
     public static int betRequest(JsonElement request) {
         int buyIn = request.getAsJsonObject().get("current_buy_in").getAsInt();
-        buyIn = buyIn - getMe(request).getAsJsonObject().get("bet").getAsInt();
+        buyIn = buyIn - getMe(request).get("bet").getAsInt();
         int round = request.getAsJsonObject().get("round").getAsInt();
         Hand hand = new Hand(getHoleCards(request));
 
@@ -26,7 +26,7 @@ public class Player {
                 buyIn = (buyIn + request.getAsJsonObject().get("minimum_raise").getAsInt()) * 2;
             }
 
-            if (hand.isCrap()) {
+            if (hand.isCrap() && !isBlind(request)) {
                 buyIn = 0;
             }
         } else {
@@ -37,6 +37,10 @@ public class Player {
 //            JsonArray communityCards = request.getAsJsonObject().get("community_cards").getAsJsonArray();
         }
         return buyIn;
+    }
+
+    private static boolean isBlind(JsonElement request) {
+        return getMe(request).get("bet").getAsInt() > 0;
     }
 
     public static void showdown(JsonElement game) {
@@ -51,8 +55,8 @@ public class Player {
         return me.getAsJsonObject().get("hole_cards").getAsJsonArray();
     }
 
-    private static JsonElement getMe(JsonElement state) {
+    private static JsonObject getMe(JsonElement state) {
         int myIndex = state.getAsJsonObject().get("in_action").getAsInt();
-        return state.getAsJsonObject().get("players").getAsJsonArray().get(myIndex);
+        return state.getAsJsonObject().get("players").getAsJsonArray().get(myIndex).getAsJsonObject();
     }
 }
