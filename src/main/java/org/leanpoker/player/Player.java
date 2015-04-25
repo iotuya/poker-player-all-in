@@ -3,12 +3,8 @@ package org.leanpoker.player;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.*;
-import java.io.*;
-import java.net.*;
-import java.util.Map;
 
 public class Player {
 
@@ -25,35 +21,47 @@ public class Player {
 
         int minimumRaise = request.getAsJsonObject().get("minimum_raise").getAsInt();
         if (round == 0) {
-            if (hand.isPocketPair() && hand.highCard()) {
-                raise = (buyIn + minimumRaise) * 2;
+            if (hand.isPocketPair()) {
+                raise = minimumRaise * randomMultiplier(random);
             } else if (hand.isCrap() && !isBlind(request)) {
-                return 0;
+                return random.nextBoolean() ? buyIn : 0;
             }
         } else {
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
             if (!cards.isEmpty()) {
-                Card highest = cards.get(0);
-                for (Card card : cards) {
-                    if (card.getRank() > highest.getRank()) {
-                        highest = card;
-                    }
-                }
+                Card highest = getHighestCard(cards);
 
                 if (hand.containsHighest(highest)) {
                     raise = minimumRaise;
                 }
 
                 if (hand.isPocketPair()) {
-                    raise = minimumRaise * (random.nextInt(4) + 2);
+                    raise = raise + minimumRaise * randomMultiplier(random);
                 }
 
-//                if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && buyIn < minimumRaise) {
-//                    return 0;
-//                }
+                JsonElement rainmanData = Rainman.callRainMan(request);
+                int rank = rainmanData.getAsJsonObject().get("rank").getAsInt();
+                int value = rainmanData.getAsJsonObject().get("value").getAsInt();
+                if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && rank < 1 || (rank >= 1 && value < 5)) {
+                    return 0;
+                }
             }
         }
         return buyIn + raise;
+    }
+
+    private static Card getHighestCard(List<Card> cards) {
+        Card highest = cards.get(0);
+        for (Card card : cards) {
+            if (card.getRank() > highest.getRank()) {
+                highest = card;
+            }
+        }
+        return highest;
+    }
+
+    private static int randomMultiplier(Random random) {
+        return random.nextInt(4) + 2;
     }
 
     private static List<Card> getCards(JsonArray community_cards) {

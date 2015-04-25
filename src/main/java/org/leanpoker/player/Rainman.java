@@ -16,7 +16,7 @@ import java.net.URLEncoder;
  * Created by ssuciu on 4/25/2015.
  */
 public class Rainman {
-    private static JsonElement callRainMan(JsonElement state) {
+    public static JsonElement callRainMan(JsonElement state) {
         JsonArray allCards = state.getAsJsonObject().get("community_cards").getAsJsonArray();
         JsonArray holeCards = Player.getHoleCards(state);
 
