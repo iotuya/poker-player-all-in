@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Player {
 
-    static final String VERSION = "Default Java folding player";
+    static final String VERSION = "defaults suck";
 
     public static int betRequest(JsonElement request) {
         int buyIn = request.getAsJsonObject().get("current_buy_in").getAsInt();
