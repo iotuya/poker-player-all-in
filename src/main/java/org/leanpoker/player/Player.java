@@ -30,13 +30,26 @@ public class Player {
                 buyIn = 0;
             }
         } else {
+            List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
             if (hand.isPocketPair()) {
                 buyIn = (buyIn + request.getAsJsonObject().get("minimum_raise").getAsInt()) * 2;
             }
+
+            if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2) {
+                return 0;
+            }
             //TODO: consider cards on the table
-//            JsonArray communityCards = request.getAsJsonObject().get("community_cards").getAsJsonArray();
         }
         return buyIn;
+    }
+
+    private static List<Card> getCards(JsonArray community_cards) {
+        List<Card> cards = new ArrayList<>();
+        for (JsonElement card : community_cards) {
+            cards.add(new Card(card.getAsJsonObject()));
+        }
+
+        return cards;
     }
 
     private static boolean isBlind(JsonElement request) {
