@@ -33,18 +33,19 @@ public class Player {
 
                 Card highest = getHighestCard(cards);
                 if (betIndex > 0) {
-                    return continuedBettingStrategy(request, buyIn, hand, highest, minimumRaise);
-                }
-                if (hand.containsHighest(highest)) {
-                    raise = minimumRaise;
-                }
+                    raise = continuedBettingStrategy(request, buyIn, hand, highest, minimumRaise);
+                } else {
+                    if (hand.containsHighest(highest)) {
+                        raise = minimumRaise;
+                    }
 
-                if (hand.isGood(rank , value)) {
-                    raise = minimumRaise * randomMultiplier(random);
-                }
+                    if (hand.isGood(rank, value)) {
+                        raise = minimumRaise * randomMultiplier(random);
+                    }
 
-                if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && rank < 1 || (rank >= 1 && rank <4  && value < 5)) {
-                    return 0;
+                    if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && rank < 1 || (rank >= 1 && rank < 4 && value < 5)) {
+                        return 0;
+                    }
                 }
             }
         }
@@ -53,13 +54,13 @@ public class Player {
 
     private static int continuedBettingStrategy(JsonElement request, int buyIn, Hand hand, Card highest, int minimumRaise) {
         if (buyIn > getMe(request).get("stack").getAsInt() / 4) {
-            return 0;
+            return 0 - buyIn;
         }
         if (!highPair(hand, highest)) {
             return buyIn;
         }
 
-        return buyIn + minimumRaise;
+        return minimumRaise;
 
     }
 
