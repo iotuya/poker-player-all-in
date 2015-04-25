@@ -46,7 +46,7 @@ public class Card {
     }
 
     public boolean isHigh() {
-        return rank >= 10;
+        return rank >= 11;
     }
 
     public boolean isHighInSuite() {
