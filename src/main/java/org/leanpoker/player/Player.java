@@ -4,11 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.util.Map;
+import java.util.*;
 
 public class Player {
 
     static final String VERSION = "defaults suck";
+    static Queue<ShowdownData> latestData = new ArrayDeque<>(10);
 
     public static int betRequest(JsonElement request) {
         int buyIn = request.getAsJsonObject().get("current_buy_in").getAsInt();
@@ -18,11 +19,17 @@ public class Player {
         if (hand.isPocketPair()) {
             buyIn = buyIn * 2;
         }
+
+        if (hand.isCrap()) {
+            buyIn = 0;
+        }
         return round == 0 ? buyIn : buyIn * 2;
     }
 
     public static void showdown(JsonElement game) {
-        //todo x
+
+//        latestData.remove();
+//        latestData.add();
     }
 
 

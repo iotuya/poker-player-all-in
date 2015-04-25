@@ -7,22 +7,49 @@ import com.google.gson.JsonObject;
  * Created by Tomislav on 25.4.2015..
  */
 public class Hand {
-    private String firstRank;
-    private String secondRank;
+    private int firstRank;
+    private int secondRank;
 
     private String firstSuite;
     private String secondSuite;
 
     public Hand(JsonArray holeCards) {
         JsonObject firstCard = holeCards.get(0).getAsJsonObject();
-        firstRank = firstCard.get("rank").getAsString();
+        firstRank = parseRank(firstCard.get("rank").getAsString());
         firstSuite = firstCard.get("suite").getAsString();
         JsonObject secondCard = holeCards.get(1).getAsJsonObject();
-        secondRank = secondCard.get("rank").getAsString();
+        secondRank = parseRank(secondCard.get("rank").getAsString());
         secondSuite = secondCard.get("suite").getAsString();
     }
 
+    private int parseRank(String rank) {
+        try {
+            return Integer.parseInt(rank);
+        } catch (NumberFormatException e) {
+            switch (rank) {
+                case "J":
+                    return 11;
+                case "Q":
+                    return 12;
+                case "K":
+                    return 13;
+                case "A":
+                    return 14;
+                default:
+                    return 0;
+            }
+        }
+    }
+
     public boolean isPocketPair() {
-        return firstRank.equals(secondRank);
+        return firstRank == secondRank;
+    }
+
+    public boolean isCrap() {
+        return (!isPocketPair() && !firstSuite.equals(secondSuite)) || bigDiff();
+    }
+
+    private boolean bigDiff() {
+        return Math.abs(firstRank - secondRank) > 2;
     }
 }
