@@ -28,7 +28,7 @@ public class Player {
             if (hand.isPocketPair() && hand.highCard()) {
                 raise = (buyIn + minimumRaise) * 2;
             } else if (hand.isCrap() && !isBlind(request)) {
-                raise = 0;
+                return 0;
             }
         } else {
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
