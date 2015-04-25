@@ -21,29 +21,36 @@ public class Player {
         int round = request.getAsJsonObject().get("round").getAsInt();
         Hand hand = new Hand(getHoleCards(request));
 
+        int minimumRaise = request.getAsJsonObject().get("minimum_raise").getAsInt();
         if (round == 0) {
             if (hand.isPocketPair() && hand.highCard()) {
-                return (buyIn + request.getAsJsonObject().get("minimum_raise").getAsInt()) * 2;
-            }
-
-            if (hand.isCrap() && !isBlind(request)) {
+                buyIn = (buyIn + minimumRaise) * 2;
+            } else if (hand.isCrap() && !isBlind(request)) {
                 buyIn = 0;
             }
         } else {
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
-            boolean biggerOnTable;
-//            for (Card card : cards) {
-//                hand.hasBigger();
-//            }
+            Card highest = cards.get(0);
+            for (Card card : cards) {
+                if (card.getRank() > highest.getRank()) {
+                    highest = card;
+                }
+            }
+
+            if (hand.isBiggerThan(highest)) {
+                buyIn = buyIn - minimumRaise;
+            }
+            if (hand.containsHighest(highest)) {
+                buyIn = (buyIn + minimumRaise);
+            }
 
             if (hand.isPocketPair()) {
-                buyIn = (buyIn + request.getAsJsonObject().get("minimum_raise").getAsInt()) * 2;
+                buyIn = (buyIn + minimumRaise) * 2;
             }
 
-            if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2) {
+            if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && buyIn < minimumRaise) {
                 return 0;
             }
-            //TODO: consider cards on the table
         }
         return buyIn;
     }

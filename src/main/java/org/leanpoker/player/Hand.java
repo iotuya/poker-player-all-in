@@ -36,4 +36,16 @@ public class Hand {
     private boolean bigDiff() {
         return Math.abs(firstCard.getRank() - secondCard.getRank()) > 2;
     }
+
+    public boolean isBiggerThan(Card card) {
+        return firstCard.getRank() > card.getRank() || secondCard.getRank() > card.getRank();
+    }
+
+    public boolean containsHighest(Card highest) {
+        return highest.getRank() == getHighest();
+    }
+
+    public int getHighest() {
+        return firstCard.getRank() > secondCard.getRank() ? firstCard.getRank() : secondCard.getRank();
+    }
 }
