@@ -19,7 +19,7 @@ public class Player {
 
         if (round == 0) {
             if (hand.isPocketPair()) {
-                buyIn = buyIn * 2;
+                buyIn = (buyIn + request.getAsJsonObject().get("minimum_raise").getAsInt()) * 2;
             }
 
             if (hand.isCrap()) {
