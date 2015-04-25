@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
  * Created by Tomislav on 25.4.2015..
  */
 public class Hand {
+    private static final String SUIT = "suit";
+    private static final String RANK = "rank";
     private int firstRank;
     private int secondRank;
 
@@ -15,11 +17,11 @@ public class Hand {
 
     public Hand(JsonArray holeCards) {
         JsonObject firstCard = holeCards.get(0).getAsJsonObject();
-        firstRank = parseRank(firstCard.get("rank").getAsString());
-        firstSuite = firstCard.get("suit").getAsString();
+        firstRank = parseRank(firstCard.get(RANK).getAsString());
+        firstSuite = firstCard.get(SUIT).getAsString();
         JsonObject secondCard = holeCards.get(1).getAsJsonObject();
-        secondRank = parseRank(secondCard.get("rank").getAsString());
-        secondSuite = secondCard.get("suit").getAsString();
+        secondRank = parseRank(secondCard.get(RANK).getAsString());
+        secondSuite = secondCard.get(SUIT).getAsString();
     }
 
     private int parseRank(String rank) {
