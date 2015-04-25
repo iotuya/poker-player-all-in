@@ -52,4 +52,20 @@ public class Card {
     public boolean isHighInSuite() {
         return rank >= 5;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Card card = (Card) o;
+
+        return rank == card.rank;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return rank;
+    }
 }

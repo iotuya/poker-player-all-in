@@ -3,6 +3,8 @@ package org.leanpoker.player;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 /**
  * Created by Tomislav on 25.4.2015..
  */
@@ -55,5 +57,14 @@ public class Hand {
 
     private boolean twoHigh() {
         return firstCard.isHigh() && secondCard.isHigh();
+    }
+
+    public boolean contains(List<Card> cards) {
+        for (Card card : cards) {
+            if (firstCard.equals(card) || secondCard.equals(card)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
