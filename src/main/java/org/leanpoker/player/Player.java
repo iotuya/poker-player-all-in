@@ -35,7 +35,7 @@ public class Player {
                     raise = minimumRaise;
                 }
 
-                if (hand.isPocketPair()) {
+                if (hand.isPocketPair() || hand.isGood()) {
                     raise = raise + minimumRaise * randomMultiplier(random);
                 }
 

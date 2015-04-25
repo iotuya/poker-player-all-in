@@ -48,4 +48,8 @@ public class Hand {
     public int getHighest() {
         return firstCard.getRank() > secondCard.getRank() ? firstCard.getRank() : secondCard.getRank();
     }
+
+    public boolean isGood() {
+        return firstCard.getRank() >= 10 && secondCard.getRank() >= 10;
+    }
 }
