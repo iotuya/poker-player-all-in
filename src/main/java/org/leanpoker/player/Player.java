@@ -22,8 +22,8 @@ public class Player {
         Hand hand = new Hand(getHoleCards(request));
 
         if (round == 0) {
-            if (hand.isPocketPair()) {
-                buyIn = (buyIn + request.getAsJsonObject().get("minimum_raise").getAsInt()) * 2;
+            if (hand.isPocketPair() && hand.highCard()) {
+                return (buyIn + request.getAsJsonObject().get("minimum_raise").getAsInt()) * 2;
             }
 
             if (hand.isCrap() && !isBlind(request)) {
@@ -31,6 +31,11 @@ public class Player {
             }
         } else {
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
+            boolean biggerOnTable;
+//            for (Card card : cards) {
+//                hand.hasBigger();
+//            }
+
             if (hand.isPocketPair()) {
                 buyIn = (buyIn + request.getAsJsonObject().get("minimum_raise").getAsInt()) * 2;
             }

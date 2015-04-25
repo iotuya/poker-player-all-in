@@ -29,7 +29,7 @@ public class Hand {
                 && !highCard();
     }
 
-    private boolean highCard() {
+    public boolean highCard() {
         return firstCard.isHigh() || secondCard.isHigh();
     }
 
