@@ -23,7 +23,7 @@ public class Player {
         int minimumRaise = request.getAsJsonObject().get("minimum_raise").getAsInt();
         if (round == 0) {
 
-            if (hand.isPocketPair()) {
+            if (hand.isPocketPair() && betIndex == 0) {
                 raise = minimumRaise * randomMultiplier(random);
             } else if (hand.isCrap() && !isBlind(request)) {
                 return 0;
