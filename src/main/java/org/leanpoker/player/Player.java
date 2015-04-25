@@ -30,23 +30,25 @@ public class Player {
             }
         } else {
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
-            Card highest = cards.get(0);
-            for (Card card : cards) {
-                if (card.getRank() > highest.getRank()) {
-                    highest = card;
+            if (!cards.isEmpty()) {
+                Card highest = cards.get(0);
+                for (Card card : cards) {
+                    if (card.getRank() > highest.getRank()) {
+                        highest = card;
+                    }
                 }
-            }
 
-            if (hand.containsHighest(highest)) {
-                buyIn = (buyIn + minimumRaise);
-            }
+                if (hand.containsHighest(highest)) {
+                    buyIn = (buyIn + minimumRaise);
+                }
 
-            if (hand.isPocketPair()) {
-                buyIn = (buyIn + minimumRaise) * 2;
-            }
+                if (hand.isPocketPair()) {
+                    buyIn = (buyIn + minimumRaise) * 2;
+                }
 
-            if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && buyIn < minimumRaise) {
-                return 0;
+                if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && buyIn < minimumRaise) {
+                    return 0;
+                }
             }
         }
         return buyIn;
