@@ -32,7 +32,7 @@ public class Player {
                     return 0;
                 } else {
                     if (hand.isPocketPair() && hand.isGood()) {
-                        raise = minimumRaise;
+                        return buyIn;
                     }
                 }
             }
