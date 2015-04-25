@@ -35,6 +35,11 @@ public class Player {
                 }
             }
         } else {
+            if (betIndex > 0) {
+                if (buyIn > getMe(request).get("stack").getAsInt() / 4) {
+                    return 0;
+                }
+            }
             List<Card> cards = getCards(request.getAsJsonObject().get("community_cards").getAsJsonArray());
             if (!cards.isEmpty()) {
                 Card highest = getHighestCard(cards);
