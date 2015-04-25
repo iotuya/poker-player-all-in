@@ -25,7 +25,7 @@ public class Player {
 
             if (hand.isPocketPair() && betIndex == 0) {
                 raise = minimumRaise * randomMultiplier(random);
-            } else if (hand.isCrap() && !isBlind(request)) {
+            } else if (hand.isCrap() && !isBlind(request, betIndex)) {
                 return 0;
             } else if (betIndex > 0) {
                 if (hand.isCrap()) {
@@ -94,8 +94,8 @@ public class Player {
         return cards;
     }
 
-    private static boolean isBlind(JsonElement request) {
-        return getMe(request).get("bet").getAsInt() > 0;
+    private static boolean isBlind(JsonElement request, int betIndex) {
+        return getMe(request).get("bet").getAsInt() > 0 && betIndex == 0;
     }
 
     public static void showdown(JsonElement game) {
