@@ -29,6 +29,12 @@ public class Player {
             if (hand.isCrap()) {
                 buyIn = 0;
             }
+        } else {
+            if (hand.isPocketPair()) {
+                buyIn = (buyIn + request.getAsJsonObject().get("minimum_raise").getAsInt()) * 2;
+            }
+            //TODO: consider cards on the table
+//            JsonArray communityCards = request.getAsJsonObject().get("community_cards").getAsJsonArray();
         }
         return buyIn;
     }
