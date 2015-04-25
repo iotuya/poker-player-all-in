@@ -42,7 +42,7 @@ public class Player {
                 JsonElement rainmanData = Rainman.callRainMan(request);
                 int rank = rainmanData.getAsJsonObject().get("rank").getAsInt();
                 int value = rainmanData.getAsJsonObject().get("value").getAsInt();
-                if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && rank < 1 || (rank >= 1 && value < 5)) {
+                if (request.getAsJsonObject().get("players").getAsJsonArray().size() > 2 && rank < 1 || (rank >= 1 && rank <4  && value < 5)) {
                     return 0;
                 }
             }
