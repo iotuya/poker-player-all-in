@@ -29,14 +29,8 @@ public class Player {
 
 
     private static JsonArray getHoleCards(JsonElement state) {
-        JsonArray players = state.getAsJsonObject().get("players").getAsJsonArray();
-        for (JsonElement player : players) {
-            if ("All In".equals(player.getAsJsonObject().get("name").getAsString())) {
-                return player.getAsJsonObject().get("hole_cards").getAsJsonArray();
-            }
-        }
-
-        return null;
+        int myIndex = state.getAsJsonObject().get("in_action").getAsInt();
+        return state.getAsJsonObject().get("players").getAsJsonArray().get(myIndex).getAsJsonObject().get("hole_cards").getAsJsonArray();
     }
 
     private static JsonElement callRainMan(JsonElement state) {
